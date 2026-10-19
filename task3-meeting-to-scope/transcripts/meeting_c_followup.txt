@@ -1,0 +1,9 @@
+Consultant: Thanks for the feedback on the proposal. What has changed since last time?
+Client: We changed our mind on a few things. We do not need the brand filter anymore, please drop it.
+Consultant: Noted. Anything else about search?
+Client: Customers should also be able to sort search results by price. That is a new request.
+Consultant: And the mobile work?
+Client: The mobile menu should now include a sticky search bar, not just an easier menu.
+Consultant: What about the date?
+Client: Our deadline moved. We now need to launch by December 15 instead of the end of November.
+Client: We also want customers to save favourite products to a wishlist.

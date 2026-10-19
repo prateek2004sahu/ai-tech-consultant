@@ -1,0 +1,43 @@
+<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Inbox Agent</title>
+<style>
+body{font:15px system-ui;margin:0;display:flex;height:100vh;color:#1a1a1a}
+#list{width:340px;border-right:1px solid #ddd;overflow:auto}#main{flex:1;overflow:auto;padding:16px}
+.item{padding:10px;border-bottom:1px solid #eee;cursor:pointer}.item:hover,.sel{background:#eef3ff}
+.tag{font-size:12px;border-radius:10px;padding:2px 8px;background:#eee;margin-right:4px}
+.high{background:#fdd}.medium{background:#ffe9b8}.low{background:#d9f5dd}
+textarea,input{width:100%;box-sizing:border-box;font:inherit;padding:8px}
+button{font:inherit;padding:8px 12px;margin:4px 4px 4px 0;border:0;border-radius:6px;background:#1f5eff;color:#fff;cursor:pointer}
+button.g{background:#666}button.r{background:#c33}.box{border:1px solid #ddd;border-radius:8px;padding:10px;margin:10px 0}.err{background:#fdecea}
+pre{white-space:pre-wrap;margin:0;font:inherit}
+</style>
+<div id=list><div style="padding:10px"><b>Inbox</b> <button class=g onclick=newMail()>+ New email</button> <button class=g onclick=autonomy()>Autonomy</button></div><div id=items></div></div>
+<div id=main>Select an email.</div>
+<script>
+const $=id=>document.getElementById(id);const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+let recs=[],cur=null;
+async function load(){recs=await (await fetch('/api/emails')).json();$('items').innerHTML=recs.map(r=>`<div class="item ${cur==r.id?'sel':''}" onclick="show('${r.id}')"><b>${esc(r.email.subject)}</b><br><span class="tag ${r.risk}">${r.category}</span><span class=tag>${r.status}</span></div>`).join('')}
+function show(id){cur=id;const r=recs.find(x=>x.id==id);load();
+ const kb=r.kb.ok?(r.kb.data.status=='answered'?`<div class=box><b>Evidence</b><br>${esc(r.kb.data.answer)}<br>${r.kb.data.sources.map(s=>`<a href="${esc(s.url)}" target=_blank>${esc(s.title)}</a>`).join(' · ')}</div>`:`<div class=box><b>No evidence found</b> - sent to a human expert (task #${r.kb.data.escalation_id})</div>`):`<div class="box err"><b>Knowledge service unavailable.</b> ${esc(r.kb.error)}. No draft was generated.</div>`;
+ const done=!['pending_review','kb_unavailable'].includes(r.status);
+ $('main').innerHTML=`<h3>${esc(r.email.subject)}</h3><div>From ${esc(r.email.from)} · <span class="tag ${r.risk}">${r.risk} risk</span><span class=tag>${r.category}</span><span class=tag>urgency ${r.urgency}</span></div>
+ <div class=box><pre>${esc(r.email.body)}</pre></div>${kb}
+ ${r.qualityFlags.map(f=>`<div class="box err">⚠ ${esc(f)}</div>`).join('')}
+ <b>${done?'Final reply':'Draft reply'}</b> <small>(prompt v${r.draftPromptVersion}, ${esc(r.model)})</small>
+ <textarea id=txt rows=10 ${done?'readonly':''}>${esc(r.finalText??r.draft??'')}</textarea>
+ ${done?`<p>Status: <b>${r.status}</b> ${r.unchanged?'(sent unchanged)':r.editRatio!=null?`(edit ratio ${r.editRatio.toFixed(2)})`:''}</p>${r.status=='auto_sent'&&r.audit=='pending'?`<button onclick="audit('${r.id}',true)">Audit OK</button><button class=r onclick="audit('${r.id}',false)">Audit BAD</button>`:''}`:
+ `<input id=why placeholder="Reason for correction (optional)"><button onclick="rev('${r.id}','send')">Send (approve/edit)</button><button class=r onclick="rev('${r.id}','reject')">Reject, send mine</button><button class=g onclick="rev('${r.id}','escalate')">Needs expert</button>`}`}
+async function rev(id,a){const body={action:a=='send'?'approve':a,final_text:$('txt').value,reason:$('why').value};
+ const r=recs.find(x=>x.id==id);if(a=='send'&&r.draft&&$('txt').value!=r.draft)body.action='edit';
+ const res=await fetch(`/api/emails/${id}/review`,{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(body)});
+ if(!res.ok)alert((await res.json()).error);await load();show(id)}
+async function audit(id,ok){await fetch(`/api/audit/${id}`,{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({ok})});await load();show(id)}
+function newMail(){$('main').innerHTML=`<h3>New customer email</h3><input id=f placeholder="from@example.com" value="customer@example.com"><br><input id=s placeholder="Subject"><textarea id=b rows=8 placeholder="Body"></textarea><button onclick=submitMail()>Process</button><div id=msg></div>`}
+async function submitMail(){$('msg').textContent='Working...';const r=await fetch('/api/emails',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({from:$('f').value,subject:$('s').value,body:$('b').value})});
+ if(!r.ok){$('msg').textContent='Error: '+JSON.stringify(await r.json());return}const d=await r.json();await load();show(d.id)}
+async function autonomy(){const d=await (await fetch('/api/autonomy')).json();
+ $('main').innerHTML=`<h3>Autonomy (threshold ${d.threshold} unchanged in a row)</h3><p><small>Never automatic: ${d.never_auto.join(', ')}</small></p>`+Object.entries(d.state).map(([c,s])=>`<div class=box><b>${c}</b>: ${s.consecutive}/${d.threshold} · eligible ${s.eligible} · enabled ${s.enabled}
+ ${s.eligible&&!s.enabled?`<button onclick="tog('${c}','enable')">Enable trial</button>`:''}${s.enabled?`<button class=r onclick="tog('${c}','disable')">Disable</button>`:''}<br><small>${s.history.slice(-3).map(esc).join('<br>')}</small></div>`).join('')}
+async function tog(c,op){await fetch(`/api/autonomy/${c}/${op}`,{method:'POST'});autonomy()}
+load();
+</script></html>

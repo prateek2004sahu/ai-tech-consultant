@@ -1,0 +1,44 @@
+<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Meeting to Scope</title>
+<style>
+body{font:15px system-ui;max-width:1000px;margin:20px auto;padding:0 16px;color:#1a1a1a}
+textarea,input,select{width:100%;box-sizing:border-box;font:inherit;padding:8px;margin:4px 0}
+button{font:inherit;padding:8px 14px;margin:4px 4px 4px 0;border:0;border-radius:6px;background:#1f5eff;color:#fff;cursor:pointer}
+button.g{background:#666}button:disabled{opacity:.5}
+.box{border:1px solid #ddd;border-radius:8px;padding:12px;margin:12px 0}.err{background:#fdecea}.ok{background:#eefbf0}.warn{background:#fff4e5}
+pre{white-space:pre-wrap;font:inherit;margin:0}table{border-collapse:collapse;width:100%}td,th{border:1px solid #ddd;padding:4px 8px;text-align:left}
+.tag{font-size:12px;border-radius:10px;padding:2px 8px;background:#eee}
+.tabs button{background:#eee;color:#222}.tabs button.on{background:#1f5eff;color:#fff}
+</style>
+<h1>Meeting to Scope</h1>
+<div class=box><b>1. Project</b><div id=proj></div>
+<input id=pn placeholder="Project name" value="Website improvements"><input id=pc placeholder="Client" value="Acme Shop"><button onclick=mkproj()>Create project</button></div>
+<div class=box><b>2. Meeting transcript</b> <select id=sample onchange=pick()><option value="">(load sample)</option></select>
+<input id=title value="Discovery meeting"><input id=date type=date><textarea id=tr rows=9 placeholder="Paste transcript: Speaker: text"></textarea>
+<button id=go onclick=run()>Analyse meeting</button> <span id=msg></span></div>
+<div id=res></div>
+<script>
+const $=id=>document.getElementById(id),esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+let pid=null,samples=[],ver=null;$('date').valueAsDate=new Date();
+fetch('/api/samples').then(r=>r.json()).then(s=>{samples=s;s.forEach((x,i)=>$('sample').add(new Option(x.name,i)))});
+function pick(){const s=samples[$('sample').value];if(s)$('tr').value=s.text}
+async function mkproj(){const r=await fetch('/api/projects',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({name:$('pn').value,client:$('pc').value})});pid=(await r.json()).id;$('proj').innerHTML=`<span class="tag ok">Project ${pid} ready</span>`}
+async function run(){if(!pid)await mkproj();$('go').disabled=true;$('msg').textContent='Agents working (can take a minute)...';
+ const r=await fetch(`/api/projects/${pid}/meetings`,{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({title:$('title').value,meeting_date:$('date').value,transcript:$('tr').value})});
+ $('go').disabled=false;const d=await r.json();
+ if(!r.ok){$('msg').textContent='';$('res').innerHTML=`<div class="box err"><b>Could not process:</b> ${esc(d.detail||JSON.stringify(d))}</div>`;return}
+ $('msg').textContent='';ver=d;render('req')}
+function render(tab){const d=ver,e=d.estimate,cr=d.change_report||{};
+ const tabs=['req','scope','est','prop','chg'].map(t=>`<button class="${t==tab?'on':''}" onclick="render('${t}')">${{req:'Requirements',scope:'Scope',est:'Estimate',prop:'Proposal',chg:'Changes'}[t]}</button>`).join('');
+ let body='';
+ if(tab=='req')body=`<table><tr><th>ID</th><th>Requirement</th><th>Status</th><th>Product check</th><th>Source</th></tr>${d.requirements.map(r=>`<tr style="${r.removed?'opacity:.4;text-decoration:line-through':''}"><td>${r.id}</td><td>${esc(r.description)}</td><td>${r.status}</td><td>${r.feasibility}<br><small>${esc(r.feasibility_evidence)}</small></td><td><small>L${r.line??'?'} ${r.quote_verified?'✓ verified':'⚠ unverified'}<br>${esc(r.quote)}</small></td></tr>`).join('')}</table>`;
+ if(tab=='scope')body=`<pre>${esc(d.scope_md)}</pre>`;
+ if(tab=='prop')body=`<pre>${esc(d.proposal_md)}</pre>`;
+ if(tab=='est')body=`<table><tr><th>Req</th><th>Task</th><th>Low</th><th>Likely</th><th>High</th><th>Assumption</th></tr>${d.tasks.map(t=>`<tr><td>${t.requirement_id}</td><td>${esc(t.name)}</td><td>${t.low}</td><td>${t.likely}</td><td>${t.high}</td><td><small>${esc(t.assumptions)}</small></td></tr>`).join('')}</table><p><b>${e.expected_hours} h</b> expected (priced) · ${e.pending_expected_hours} h pending clarification · ${e.price} ${e.currency} · ~${e.weeks} week(s)<br><small>${esc(e.note)}</small></p>`;
+ if(tab=='chg')body=d.baseline_version?`<h3>Compared with approved v${d.baseline_version}</h3>`+['added','modified','removed','out_of_scope','constraints'].map(k=>`<div class=box><b>${k}</b> (${(cr[k]||[]).length})<pre>${esc(JSON.stringify(cr[k]||[],null,1))}</pre></div>`).join('')+`<div class=box><b>Estimate delta</b><pre>${esc(JSON.stringify(cr.estimate_delta||{},null,1))}</pre></div>`:'<p>First meeting: no baseline yet. Approve this version, then add the follow-up meeting.</p>';
+ $('res').innerHTML=`<div class=box><b>Version ${d.version}</b> <span class=tag>${d.status}</span> <small>${esc(d.run.model)} · ${d.run.seconds}s · $${d.run.cost_usd}</small>
+ ${d.issues.length?`<div class="box warn"><b>Review flags</b><ul>${d.issues.map(i=>`<li>${esc(i)}</li>`).join('')}</ul></div>`:''}
+ <div class=tabs>${tabs}</div>${body}<hr><input id=rv placeholder="Your name (reviewer)"><button onclick=appr()>Approve</button><button class=g onclick=snd()>Send to client</button> <span id=m2></span></div>`}
+async function appr(){const r=await fetch(`/api/projects/${pid}/versions/${ver.version}/approve`,{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({reviewer:$('rv').value})});const d=await r.json();if(r.ok){ver=d;render('req')}else $('m2').textContent=JSON.stringify(d.detail||d)}
+async function snd(){const r=await fetch(`/api/projects/${pid}/versions/${ver.version}/send`,{method:'POST'});const d=await r.json();$('m2').textContent=r.ok?'Sent (simulated)':'Blocked: '+(d.detail||'')}
+</script></html>

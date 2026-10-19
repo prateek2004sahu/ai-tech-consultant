@@ -1,0 +1,11 @@
+Consultant: Let's talk about your online shop. What do you want changed?
+Client: We want a simpler checkout. Right now customers have to fill in too many fields.
+Consultant: Understood. Anything about orders?
+Client: We need order confirmation emails sent to customers and a notification to our warehouse for every new order.
+Consultant: And payments?
+Client: We want to add a new payment integration with Stripe. Our bank also requires 3D Secure for card payments.
+Consultant: Who owns the Stripe account?
+Client: We do. We will give you test keys, but I am not sure when our bank approves the live account.
+Consultant: Timeline?
+Client: We need this live before the holiday season, so by the middle of November.
+Client: We would also like discount codes at checkout, maybe later as a second phase.

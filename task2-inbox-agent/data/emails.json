@@ -1,0 +1,352 @@
+[
+ {
+  "id": "IN-001",
+  "subject": "How do I update my website logo?",
+  "body": "Hi, I just got a new logo designed. How do I replace the one on my site header? Thanks, Maria",
+  "expected_category": "how_to",
+  "split": "dev"
+ },
+ {
+  "id": "IN-002",
+  "subject": "Changing my homepage colours",
+  "body": "Where can I change the main colours of my website? I want to match my brand.",
+  "expected_category": "how_to",
+  "split": "dev"
+ },
+ {
+  "id": "IN-003",
+  "subject": "Add a new membership level",
+  "body": "How can I add a third membership plan priced differently from the first two?",
+  "expected_category": "how_to",
+  "split": "dev"
+ },
+ {
+  "id": "IN-004",
+  "subject": "Export member list",
+  "body": "Is it possible to download a CSV of all my members? I need it for a mailing.",
+  "expected_category": "how_to",
+  "split": "test"
+ },
+ {
+  "id": "IN-005",
+  "subject": "Set up welcome email",
+  "body": "How do I edit the email new members receive after signing up?",
+  "expected_category": "how_to",
+  "split": "dev"
+ },
+ {
+  "id": "IN-006",
+  "subject": "Creating a custom page",
+  "body": "Where do I create an About Us page and add it to the menu?",
+  "expected_category": "how_to",
+  "split": "dev"
+ },
+ {
+  "id": "IN-007",
+  "subject": "Connect my own domain",
+  "body": "How to point my own domain name to the site you host for me?",
+  "expected_category": "how_to",
+  "split": "dev"
+ },
+ {
+  "id": "IN-008",
+  "subject": "Hide a menu item",
+  "body": "How do I hide the Blog link from the top menu without deleting the page?",
+  "expected_category": "how_to",
+  "split": "test"
+ },
+ {
+  "id": "IN-009",
+  "subject": "Add search filters",
+  "body": "Is it possible to let visitors filter listings by city and category?",
+  "expected_category": "how_to",
+  "split": "dev"
+ },
+ {
+  "id": "IN-010",
+  "subject": "Change the contact form email",
+  "body": "Where do I change which address receives contact form messages?",
+  "expected_category": "how_to",
+  "split": "dev"
+ },
+ {
+  "id": "IN-011",
+  "subject": "Mobile menu settings",
+  "body": "How can I make the menu look better on phones? It's cramped.",
+  "expected_category": "how_to",
+  "split": "dev"
+ },
+ {
+  "id": "IN-012",
+  "subject": "Upload photos in bulk",
+  "body": "How do I upload many listing photos at once instead of one by one?",
+  "expected_category": "how_to",
+  "split": "test"
+ },
+ {
+  "id": "IN-013",
+  "subject": "Payment integration stopped working",
+  "body": "Since yesterday my payment gateway is not working. Customers see an error at checkout.",
+  "expected_category": "troubleshooting",
+  "split": "dev"
+ },
+ {
+  "id": "IN-014",
+  "subject": "Emails not arriving",
+  "body": "Our members say they don't receive the signup confirmation email. Nothing in spam either.",
+  "expected_category": "troubleshooting",
+  "split": "dev"
+ },
+ {
+  "id": "IN-015",
+  "subject": "Cannot log in to admin",
+  "body": "I can't log in to the admin area, it says my password is invalid but I just reset it.",
+  "expected_category": "troubleshooting",
+  "split": "dev"
+ },
+ {
+  "id": "IN-016",
+  "subject": "Images not showing",
+  "body": "The listing images are broken on every page since this morning. Error 404 on each one.",
+  "expected_category": "troubleshooting",
+  "split": "test"
+ },
+ {
+  "id": "IN-017",
+  "subject": "Search returns nothing",
+  "body": "Our site search fails for any keyword, it always shows zero results.",
+  "expected_category": "troubleshooting",
+  "split": "dev"
+ },
+ {
+  "id": "IN-018",
+  "subject": "Mobile layout broken",
+  "body": "The homepage doesn't work on iPhone, buttons overlap and the menu won't open.",
+  "expected_category": "troubleshooting",
+  "split": "dev"
+ },
+ {
+  "id": "IN-019",
+  "subject": "SSL warning",
+  "body": "Browsers show a security warning on our domain, the certificate seems wrong.",
+  "expected_category": "troubleshooting",
+  "split": "dev"
+ },
+ {
+  "id": "IN-020",
+  "subject": "Form submits blank",
+  "body": "The contact form submission fails with an error and nobody gets the message.",
+  "expected_category": "troubleshooting",
+  "split": "test"
+ },
+ {
+  "id": "IN-021",
+  "subject": "Slow admin",
+  "body": "The admin dashboard is very slow and sometimes the save button fails with a timeout.",
+  "expected_category": "troubleshooting",
+  "split": "dev"
+ },
+ {
+  "id": "IN-022",
+  "subject": "Coupon code error",
+  "body": "Coupon codes can't be applied, checkout says invalid even for new codes.",
+  "expected_category": "troubleshooting",
+  "split": "dev"
+ },
+ {
+  "id": "IN-023",
+  "subject": "Booking feature",
+  "body": "Can you add a booking calendar so customers can reserve appointments on our site?",
+  "expected_category": "project_request",
+  "split": "dev"
+ },
+ {
+  "id": "IN-024",
+  "subject": "Integrate our CRM",
+  "body": "We need a new integration so every signup is pushed into our CRM automatically.",
+  "expected_category": "project_request",
+  "split": "test"
+ },
+ {
+  "id": "IN-025",
+  "subject": "Custom dashboard",
+  "body": "Can you build a custom dashboard showing monthly signups and revenue for our team?",
+  "expected_category": "project_request",
+  "split": "dev"
+ },
+ {
+  "id": "IN-026",
+  "subject": "Multi-language site",
+  "body": "We would like a new feature: the site in English and Spanish with a language switch.",
+  "expected_category": "project_request",
+  "split": "dev"
+ },
+ {
+  "id": "IN-027",
+  "subject": "Loyalty points",
+  "body": "Can you create a loyalty points system for returning members?",
+  "expected_category": "project_request",
+  "split": "dev"
+ },
+ {
+  "id": "IN-028",
+  "subject": "Custom report",
+  "body": "Can you develop a custom report that lists expiring memberships each week?",
+  "expected_category": "project_request",
+  "split": "test"
+ },
+ {
+  "id": "IN-029",
+  "subject": "Please cancel my plan",
+  "body": "Please cancel my subscription effective today and refund this month's payment.",
+  "expected_category": "refund_cancellation",
+  "split": "dev"
+ },
+ {
+  "id": "IN-030",
+  "subject": "Charged twice",
+  "body": "I was charged twice in March, I want a refund for the duplicate payment.",
+  "expected_category": "refund_cancellation",
+  "split": "dev"
+ },
+ {
+  "id": "IN-031",
+  "subject": "Cancel before renewal",
+  "body": "I want to cancel before my annual renewal next week. How do I stop the charge?",
+  "expected_category": "refund_cancellation",
+  "split": "dev"
+ },
+ {
+  "id": "IN-032",
+  "subject": "Refund for unused months",
+  "body": "We stopped using the platform in June. Can I get a refund for the remaining months?",
+  "expected_category": "refund_cancellation",
+  "split": "test"
+ },
+ {
+  "id": "IN-033",
+  "subject": "Cancel add-on",
+  "body": "Cancel the SEO add-on from my plan please, and money back for this cycle.",
+  "expected_category": "refund_cancellation",
+  "split": "dev"
+ },
+ {
+  "id": "IN-034",
+  "subject": "Chargeback warning",
+  "body": "If you don't refund the renewal I will open a chargeback with my bank.",
+  "expected_category": "refund_cancellation",
+  "split": "dev"
+ },
+ {
+  "id": "IN-035",
+  "subject": "Your update broke our site",
+  "body": "Your latest update broke our site. Our customers could not order all day. This is unacceptable.",
+  "expected_category": "complaint",
+  "split": "dev"
+ },
+ {
+  "id": "IN-036",
+  "subject": "Very disappointed",
+  "body": "I am very disappointed with support. Three days waiting is terrible service.",
+  "expected_category": "complaint",
+  "split": "test"
+ },
+ {
+  "id": "IN-037",
+  "subject": "Lost listings",
+  "body": "Half of our listings disappeared after your migration. We are furious and losing business.",
+  "expected_category": "complaint",
+  "split": "dev"
+ },
+ {
+  "id": "IN-038",
+  "subject": "Rude chat agent",
+  "body": "The chat agent was rude to me yesterday. This is the worst support I've had.",
+  "expected_category": "complaint",
+  "split": "dev"
+ },
+ {
+  "id": "IN-039",
+  "subject": "Downtime again",
+  "body": "Third outage this month. We are paying for a reliable service and this is unacceptable.",
+  "expected_category": "complaint",
+  "split": "dev"
+ },
+ {
+  "id": "IN-040",
+  "subject": "Misleading promise",
+  "body": "Sales told us the feature was included, now it costs extra. I feel misled and angry.",
+  "expected_category": "complaint",
+  "split": "test"
+ },
+ {
+  "id": "IN-041",
+  "subject": "Quote for redesign",
+  "body": "Could you give us a quote for redesigning our homepage and listing pages?",
+  "expected_category": "quote_request",
+  "split": "dev"
+ },
+ {
+  "id": "IN-042",
+  "subject": "Price for extra feature",
+  "body": "How much would it cost to add a customer review system to our site?",
+  "expected_category": "quote_request",
+  "split": "dev"
+ },
+ {
+  "id": "IN-043",
+  "subject": "Estimate migration",
+  "body": "We need an estimate to migrate our old WordPress data into your platform.",
+  "expected_category": "quote_request",
+  "split": "dev"
+ },
+ {
+  "id": "IN-044",
+  "subject": "Pricing for training",
+  "body": "What is the price for a two-hour training session for my staff?",
+  "expected_category": "quote_request",
+  "split": "test"
+ },
+ {
+  "id": "IN-045",
+  "subject": "Cost of custom integration",
+  "body": "Can you quote the cost of integrating our accounting software?",
+  "expected_category": "quote_request",
+  "split": "dev"
+ },
+ {
+  "id": "IN-046",
+  "subject": "Following up on my request",
+  "body": "Following up on my email from Monday about the logo issue. Any update?",
+  "expected_category": "follow_up",
+  "split": "dev"
+ },
+ {
+  "id": "IN-047",
+  "subject": "Did you receive my files",
+  "body": "Checking in: did you receive the files I sent last week for the new pages?",
+  "expected_category": "follow_up",
+  "split": "dev"
+ },
+ {
+  "id": "IN-048",
+  "subject": "Still waiting",
+  "body": "I am still waiting for a reply about the invoice question I sent on the 3rd.",
+  "expected_category": "follow_up",
+  "split": "test"
+ },
+ {
+  "id": "IN-049",
+  "subject": "Any update on ticket",
+  "body": "Any update on ticket #4821? It has been five days.",
+  "expected_category": "follow_up",
+  "split": "dev"
+ },
+ {
+  "id": "IN-050",
+  "subject": "Follow up on proposal",
+  "body": "Just following up on the proposal you sent. When can we expect the next step?",
+  "expected_category": "follow_up",
+  "split": "dev"
+ }
+]

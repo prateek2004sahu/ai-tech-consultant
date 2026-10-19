@@ -1,0 +1,12 @@
+Consultant: Thanks for joining. Tell me what is not working on the site today.
+Client: Our website search isn't great. We want customers to find products faster, and we'd like some filters.
+Consultant: Which filters matter most?
+Client: We need filters by category and price. We would also like a brand filter, but that one is optional.
+Consultant: And what about phones?
+Client: Honestly the mobile experience is poor. We need the mobile menu to be easier to use on phones.
+Consultant: Any deadline or budget?
+Client: We want to launch by the end of November. Budget is flexible but we want to keep it reasonable.
+Consultant: You mentioned AI earlier.
+Client: Maybe add AI search as well, though I am not sure what that means yet.
+Consultant: We will check what the platform already supports and send a proposal.
+Client: Great. Also we need an email notification to staff when someone submits the contact form.

@@ -1,0 +1,35 @@
+<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Knowledge Brain</title>
+<style>
+body{font:16px system-ui;max-width:820px;margin:24px auto;padding:0 16px;color:#1a1a1a}
+input,textarea,button{font:inherit;padding:8px;border:1px solid #bbb;border-radius:6px}
+input{width:75%}button{background:#1f5eff;color:#fff;border:0;cursor:pointer}
+.card{border:1px solid #ddd;border-radius:8px;padding:12px;margin:12px 0}
+.warn{background:#fff4e5;border-color:#f0b35a}.ok{background:#eefbf0}.err{background:#fdecea}
+small{color:#666}img{max-width:100%;border:1px solid #ddd;margin-top:6px}
+</style>
+<h1>Knowledge Brain</h1>
+<p><input id=q placeholder="Ask a product question..."> <button onclick=ask()>Ask</button></p>
+<div id=out></div>
+<h2>Escalations (human expert)</h2><div id=esc></div>
+<script>
+const key=localStorage.getItem('kbkey')||'';const H={'Content-Type':'application/json','X-API-Key':key};
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+async function ask(){
+ const o=document.getElementById('out');o.innerHTML='<div class=card>Thinking...</div>';
+ try{const r=await fetch('/query',{method:'POST',headers:H,body:JSON.stringify({question:q.value})});
+ if(!r.ok){o.innerHTML=`<div class="card err">Knowledge service error (${r.status}). ${esc(await r.text())}</div>`;return}
+ const d=await r.json();const cls=d.status=='answered'?'ok':'warn';
+ o.innerHTML=`<div class="card ${cls}"><b>${d.status=='answered'?'Answer':'I do not know yet'}</b><p>${esc(d.answer).replace(/\n/g,'<br>')}</p>
+ ${d.sources.map(s=>`<div><a href="${esc(s.url)}" target=_blank>${esc(s.title)}</a> <small>relevance ${s.relevance}</small></div>`).join('')}
+ ${d.images.map(u=>`<img src="${esc(u)}" loading=lazy>`).join('')}
+ ${d.escalation_id?`<p><small>Sent to a human expert (task #${d.escalation_id}).</small></p>`:''}</div>`;
+ }catch(e){o.innerHTML=`<div class="card err">Knowledge service unavailable.</div>`}
+ loadEsc()}
+async function loadEsc(){
+ const r=await fetch('/escalations',{headers:H});if(!r.ok)return;const l=await r.json();
+ document.getElementById('esc').innerHTML=l.length?l.map(e=>`<div class=card><b>#${e.id}</b> ${esc(e.question)}<br><small>${esc(e.reason)}</small>
+ <p><textarea id=a${e.id} rows=3 style="width:95%" placeholder="Expert answer"></textarea><br><button onclick=res(${e.id})>Approve answer</button></p></div>`).join(''):'<small>No open tasks.</small>'}
+async function res(id){await fetch(`/escalations/${id}/resolve`,{method:'POST',headers:H,body:JSON.stringify({answer:document.getElementById('a'+id).value,approved:true})});loadEsc()}
+q.addEventListener('keydown',e=>{if(e.key=='Enter')ask()});loadEsc();
+</script></html>
